@@ -60,7 +60,8 @@ void *handle_new(){
 			p.c = pc;		
 			create_win();
 			pthread_t nserver;
-			pthread_create(&nserver, NULL, handle, &p);	
+			pthread_create(&nserver, NULL, handle, &p);
+			strcpy(c.sstr, READY);	
 		}
 		sleep(1);
 	}
