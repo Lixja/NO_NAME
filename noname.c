@@ -16,12 +16,11 @@ NWIN* create_win();
 NWIN *nnsh, *nntabs[100];
 int position_nt = 0;
 int focus = 0; 	//0 = Shell, 1-100 =tabs
-int state = 0; //0 = init, 1 = Run
+int state = 3; //0 = init, 1 = Run, 3=config
 
 
 int main(int argc, char* argv[]){
 	init_screen();
-	create_nserver(create_win);
 	//Print some text and waiting for input
 	aprint(A_REVERSE,"Loading NO_NAME ...");
 	getch();
@@ -52,15 +51,16 @@ void initW(){
 NWIN* create_win(){
 	NWIN *t = nntabs[position_nt];
 	t = init(t);
-	init_tab(t, 0);
+	init_tab(t, 1);
 	create_nwin(t);
-	wbkgd(nnsh->border, COLOR_PAIR(2));
-	nbox(nnsh);
+	wbkgd(t->border, COLOR_PAIR(2));
+	nbox(t);
 	return t;
 }
 
 void run(){
 	state = 1;
+	create_nserver(create_win);
 	run_ninput();
 	while(state == 1){
 		nrefresh(nnsh);

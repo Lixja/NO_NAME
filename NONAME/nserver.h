@@ -8,6 +8,8 @@
 #include "nwin.h"
 #include "nprint.h"
 
+#define READY "rfn"
+
 typedef struct{
 	key_t key;
 	int shmflg;
@@ -27,7 +29,6 @@ con c;
 extern int state;
 prg prgs[100];
 int position;
-char *sstr;
 
 extern NWIN* create_win(); 
 
@@ -40,13 +41,14 @@ int create_nserver(){
 
 	c.id = shmget(c.key, c.size, IPC_CREAT | 0666);
 	c.sstr = shmat(c.id, NULL, 0);
+	strcpy(c.sstr, READY);
 
 	pthread_t nserver;
 	pthread_create(&nserver, NULL, handle_new, NULL);
 }
 
 void *handle_new(){
-	while(state == 1){
+	while(state != 0){
 		if(c.sstr[0] == 'n'){
 			con pc;
 			pc.key = c.key + position +1;

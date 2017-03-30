@@ -7,3 +7,5 @@ noname:
 	$(CC) $(CFLAGS) noname.c -o noname -m32 $(STD) $(LIBS)
 clean:
 	rm -r noname
+debug:
+	$(CC) $(CFLAGS) -g noname.c -o dnoname -m32 $(STD) $(LIBS)
