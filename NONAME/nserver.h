@@ -70,7 +70,7 @@ void *handle_new(){
 void *handle(void* pp){
 	prg *p = (prg*) pp;
 	while(state == 1 && p->alive == 1){
-
+		sleep(1);
 	}
 }
 
