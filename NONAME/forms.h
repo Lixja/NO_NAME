@@ -1,7 +1,7 @@
 #ifndef FORMS_H
 #define FORMS_H
 
-#include "../NWIN/nwin.h"
+#include "nwin.h"
 
 
 void init_tab(NWIN *nwin, int pos){

@@ -8,19 +8,18 @@
 #include "nprint.h"
 
 extern int focus, state;
-extern NWIN *nntab, *nnwin, *nnside, *nnsh;
+extern NWIN *nnsh, *nntabs[100];
 
 void *input(){
 	NWIN *owin;
 	while(state == 1){
 		if(focus == 0){
-			owin = nntab;
-		}else if(focus == 1){
-			owin = nnwin;
-		}else if(focus == 2){
-			owin = nnside;
-		}else if(focus == 3){
 			owin = nnsh;
+		}else{
+			if(nntabs[focus-1] != NULL){
+				owin = nntabs[focus-1];
+			}
+			
 		}
 
 		int c = getch();
@@ -32,14 +31,9 @@ void *input(){
 				clear_input(owin);
 			}
 		}else if(c == KEY_F(5)){
-			nremchar(owin);
-			focus = 0;
+			--focus;
 		}else if(c == KEY_F(6)){
-			nremchar(owin);
-			focus = 1;
-		}else if(c == KEY_F(7)){
-			nremchar(owin);
-			focus = 2;
+			++focus;
 		}else if(c == KEY_F(3)){
 			focus = 3;
 		}else if(c == KEY_BACKSPACE){

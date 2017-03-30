@@ -3,14 +3,9 @@
 
 #include <ncurses.h>
 #include <unistd.h>
-#include "../NWIN/nwin.h"
-#include "../NWIN/nprint.h"
-#include "../NC/nstring.h"
-
-char help[] = "help";
-char network[] = "net";
-
-void create_ARGC_ARGV();
+#include "nwin.h"
+#include "nprint.h"
+#include "nstring.h"
 
 void handle_shell(WINDOW *win, char* input){
 	int argc = 0;

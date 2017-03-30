@@ -1,24 +1,27 @@
 #include <ncurses.h>
 #include <unistd.h>
 
-#include "NWIN/nprint.h"
-#include "NWIN/nwin.h"
-#include "NWIN/ninput.h"
+#include "NONAME/nprint.h"
+#include "NONAME/nwin.h"
+#include "NONAME/ninput.h"
 #include "NONAME/forms.h"
 #include "NONAME/sh.h"
+#include "NONAME/nserver.h"
 
 #define NAME "NO_NAME"
 
 void init_screen(), initW(), run();
+NWIN* create_win();
 
-NWIN *nntab, *nnwin, *nnside, *nnsh;
-int focus = 3; 	//0 = Tab, 1=Win, 2=Side, 3 = Shell
+NWIN *nnsh, *nntabs[100];
+int position_nt = 0;
+int focus = 0; 	//0 = Shell, 1-100 =tabs
 int state = 0; //0 = init, 1 = Run
 
 
 int main(int argc, char* argv[]){
 	init_screen();
-
+	create_nserver(create_win);
 	//Print some text and waiting for input
 	aprint(A_REVERSE,"Loading NO_NAME ...");
 	getch();
@@ -36,40 +39,34 @@ int main(int argc, char* argv[]){
 }
 
 void initW(){
-	nntab = init(nntab);
-	nnwin = init(nnwin);
-	nnside = init(nnside);
 	nnsh = init(nnsh);
-
-	init_tab(nntab, 0);
-	init_tab(nnwin, 1);
-	init_tab(nnside, 3);
 	init_shell(nnsh);
 	nnsh->dojob = handle_shell;
 
 	//creating the nwins
-	create_nwin(nntab);
-	create_nwin(nnwin);
-	create_nwin(nnside);
 	create_nwin(nnsh);
-	wbkgd(nntab->border, COLOR_PAIR(2));
-	wbkgd(nnwin->border, COLOR_PAIR(3));
-	wbkgd(nnside->border, COLOR_PAIR(2));
 	wbkgd(nnsh->border, COLOR_PAIR(1));
-	nbox(nntab);
-	nbox(nnwin);
-	nbox(nnside);
 	nbox(nnsh);
+}
+
+NWIN* create_win(){
+	NWIN *t = nntabs[position_nt];
+	t = init(t);
+	init_tab(t, 0);
+	create_nwin(t);
+	wbkgd(nnsh->border, COLOR_PAIR(2));
+	nbox(nnsh);
+	return t;
 }
 
 void run(){
 	state = 1;
 	run_ninput();
 	while(state == 1){
-		nrefresh(nntab);
 		nrefresh(nnsh);
-		nrefresh(nnside);
-		nrefresh(nnwin);
+		for(int i=0; i<position; i++){
+			nrefresh(nntabs[i]);
+		}
 		usleep(500);
 	}
 }
