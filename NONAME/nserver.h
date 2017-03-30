@@ -64,12 +64,12 @@ void *handle_new(){
 			p.win = create_win();
 			sprintf(c.sstr, "%d", pc.key);
 			while(c.sstr[0] != 'r'){
-				sleep(1);
+				usleep(500);
 			}
 			pthread_t nserver;
 			pthread_create(&nserver, NULL, handle, &p);
 		}
-		sleep(1);
+		usleep(500);
 	}
 }
 
@@ -82,7 +82,7 @@ void *handle(void* pp){
 			nprint(p->win,nsub(msg, 1));
 			strcpy(p->c->sstr, READY);
 		}
-		sleep(1);
+		usleep(500);
 	}
 }
 

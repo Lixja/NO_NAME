@@ -42,11 +42,11 @@ int connect_to_nnserver(){
 
 void *establish_connection(){
 	while(strcmp(c.sstr, READY) != 0){
-		sleep(1);
+		usleep(500);
 	}
 	strcpy(c.sstr, "n");
 	while(c.sstr[0] == 'n'){
-		sleep(1);
+		usleep(500);
 	}
 	alive =1;
 	pc.key = atol(c.sstr);
@@ -72,13 +72,13 @@ void *handle(){
 		if(strcmp(pc.sstr, READY) == 0){
 			reply = 1;
 		}
-		sleep(1);
+		usleep(500);
 	}
 }
 
 void wait_for_connecting(){
 	while(alive==0 && timeout > 0){
-		sleep(1);
+		usleep(500);
 		timeout--;
 	}
 }
@@ -98,7 +98,7 @@ void write_msg(char* to_write){
 
 void close_connection(){
 	while(com != 0){
-		sleep(1);
+		usleep(500);
 	}
 }
 
