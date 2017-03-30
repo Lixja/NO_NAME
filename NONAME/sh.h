@@ -13,7 +13,8 @@ void *execute_prg(void*);
 void handle_shell(WINDOW *win, char* input){
 	int argc = 0;
 	char argv[10][50];
-	
+	char c_input[100];
+	strcpy(c_input, input);
 	
 	char *ptr;
 	
@@ -27,7 +28,7 @@ void handle_shell(WINDOW *win, char* input){
 	if(access(nstrcat("bin/",argv[0]), X_OK) != -1){
 		wprintw(win, nstrcat(argv[0], " will be executed now.\n"));
 		pthread_t nin;
-		pthread_create(&nin, NULL, execute_prg, nstrcat("bin/",input));
+		pthread_create(&nin, NULL, execute_prg, nstrcat("bin/",c_input));
 
 	}else{
 		wprintw(win, "Program not found\n");
