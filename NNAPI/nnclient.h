@@ -24,6 +24,7 @@ int timeout = 10;
 int alive = 0;
 con c, pc;
 void *establish_connection(), *handle();
+int reply = 0;
 
 char com;
 char msg[100];
@@ -68,6 +69,9 @@ void *handle(){
 				break;
 			}
 		}
+		if(strcmp(pc.sstr, READY) == 0){
+			reply = 1;
+		}
 		sleep(1);
 	}
 }
@@ -79,9 +83,17 @@ void wait_for_connecting(){
 	}
 }
 
+void wait_for_reply(){
+	while(reply == 0){
+		sleep(0);
+	}
+	reply = 0;
+}
+
 void write_msg(char* to_write){
 	com = 'w';
 	strcpy(msg, to_write);
+	wait_for_reply();
 }
 
 void close_connection(){

@@ -80,7 +80,7 @@ void *handle(void* pp){
 			char msg[100];
 			strcpy(msg, p->c->sstr);
 			nprint(p->win,nsub(msg, 1));
-			strcpy(p->c->sstr, "");
+			strcpy(p->c->sstr, READY);
 		}
 		sleep(1);
 	}
