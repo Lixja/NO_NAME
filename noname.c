@@ -10,7 +10,7 @@
 
 #define NAME "NO_NAME"
 
-void init_screen(), initW(), run();
+void init_screen(), initSH(), run();
 NWIN* create_win();
 
 NWIN *nnsh, *nntabs[100];
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
 	clear();
 	maprint(A_STANDOUT, NAME, 0, (COLS-(strlen(NAME)))/2);
 	refresh();
-	initW();
+	initSH();
 	run();
 
 	clear();
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-void initW(){
+void initSH(){
 	nnsh = init(nnsh);
 	init_shell(nnsh);
 	nnsh->dojob = handle_shell;
@@ -49,13 +49,13 @@ void initW(){
 }
 
 NWIN* create_win(){
-	NWIN *t = nntabs[position_nt];
-	t = init(t);
-	init_tab(t, 1);
-	create_nwin(t);
-	wbkgd(t->border, COLOR_PAIR(2));
-	nbox(t);
-	return t;
+	nntabs[position_nt] = init(nntabs[position_nt]);
+	init_tab(nntabs[position_nt], 1);
+	create_nwin(nntabs[position_nt]);
+	wbkgd(nntabs[position_nt]->border, COLOR_PAIR(2));
+	nbox(nntabs[position_nt]);
+	position_nt++;
+	return nntabs[position_nt-1];
 }
 
 void run(){
@@ -64,7 +64,7 @@ void run(){
 	run_ninput();
 	while(state == 1){
 		nrefresh(nnsh);
-		for(int i=0; i<position; i++){
+		for(int i=0; i<position_nt; i++){
 			nrefresh(nntabs[i]);
 		}
 		usleep(500);

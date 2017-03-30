@@ -5,8 +5,10 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <pthread.h>
+#include <stdio.h>
 #include "nwin.h"
 #include "nprint.h"
+#include "nstring.h"
 
 #define READY "rfn"
 
@@ -22,7 +24,7 @@ typedef struct{
 	char name[50];
 	int alive;
 	NWIN *win;
-	con c;
+	con *c;
 }prg;
 
 con c;
@@ -53,15 +55,19 @@ void *handle_new(){
 			con pc;
 			pc.key = c.key + position +1;
 			pc.size = 100;
-			pc.id = shmget(c.key, c.size, IPC_CREAT | 0666);
+			pc.id = shmget(pc.key, pc.size, IPC_CREAT | 0666);
+			pc.sstr = shmat(pc.id, NULL, 0);
 			prg p;
 			strcpy(p.name, c.sstr);
 			p.alive = 1;
-			p.c = pc;		
-			create_win();
+			p.c = &pc;	
+			p.win = create_win();
+			sprintf(c.sstr, "%d", pc.key);
+			while(c.sstr[0] != 'r'){
+				sleep(1);
+			}
 			pthread_t nserver;
 			pthread_create(&nserver, NULL, handle, &p);
-			strcpy(c.sstr, READY);	
 		}
 		sleep(1);
 	}
@@ -70,6 +76,12 @@ void *handle_new(){
 void *handle(void* pp){
 	prg *p = (prg*) pp;
 	while(state == 1 && p->alive == 1){
+		if(p->c->sstr[0] == 'w'){
+			char msg[100];
+			strcpy(msg, p->c->sstr);
+			nprint(p->win,nsub(msg, 1));
+			strcpy(p->c->sstr, "");
+		}
 		sleep(1);
 	}
 }

@@ -7,6 +7,8 @@
 #include <pthread.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include "../NONAME/nstring.h"
 
 #define READY "rfn"
 
@@ -20,8 +22,11 @@ typedef struct{
 
 int timeout = 10;
 int alive = 0;
-con c;
+con c, pc;
 void *establish_connection(), *handle();
+
+char com;
+char msg[100];
 
 int connect_to_nnserver(){
 	c.key = 36987;
@@ -38,28 +43,50 @@ void *establish_connection(){
 	while(strcmp(c.sstr, READY) != 0){
 		sleep(1);
 	}
-	strcpy(c.sstr, "nTEST");
+	strcpy(c.sstr, "n");
 	while(c.sstr[0] == 'n'){
 		sleep(1);
 	}
 	alive =1;
-	con pc;
-	pc.key = atoi(*c.sstr);
+	pc.key = atol(c.sstr);
 	pc.size = 100;
-	pc.id = shmget(c.key, c.size, IPC_CREAT | 0666);
+	pc.id = shmget(pc.key, pc.size, IPC_CREAT | 0666);
+	pc.sstr = shmat(pc.id, NULL, 0);
+	strcpy(c.sstr, READY);
 	pthread_t nserver;
 	pthread_create(&nserver, NULL, handle, NULL);
 
 }
 
 void *handle(){
-
+	while(alive == 1){
+		if(com != 0){
+			switch(com){
+				case 'w':
+				strcpy(pc.sstr, nstrcat(&com,msg));
+				com = 0;
+				break;
+			}
+		}
+		sleep(1);
+	}
 }
 
 void wait_for_connecting(){
 	while(alive==0 && timeout > 0){
 		sleep(1);
 		timeout--;
+	}
+}
+
+void write_msg(char* to_write){
+	com = 'w';
+	strcpy(msg, to_write);
+}
+
+void close_connection(){
+	while(com != 0){
+		sleep(1);
 	}
 }
 
