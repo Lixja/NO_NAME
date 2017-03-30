@@ -6,14 +6,14 @@ STD=-std=c99
 all: version date echo helloworld
 	
 version:
-	$(CC) $(CFLAGS) version.c -o ../bin/version -m32 $(STD) $(LIBS)
+	$(CC) $(CFLAGS) version.c -o ../bin/version $(STD) $(LIBS)
 date:
-	$(CC) $(CFLAGS) date.c -o ../bin/date -m32 $(STD) $(LIBS)
+	$(CC) $(CFLAGS) date.c -o ../bin/date $(STD) $(LIBS)
 echo:
-	$(CC) $(CFLAGS) echo.c -o ../bin/echo -m32 $(STD) $(LIBS)
+	$(CC) $(CFLAGS) echo.c -o ../bin/echo $(STD) $(LIBS)
 helloworld:
-	$(CC) $(CFLAGS) helloworld.c -o ../bin/helloworld -m32 $(STD) $(LIBS)
+	$(CC) $(CFLAGS) helloworld.c -o ../bin/helloworld $(STD) $(LIBS)
 clean:
 	rm -r ../bin/*
 debug:
-	$(CC) -g $(CFLAGS) version.c -o ../bin/gversion -m32 $(STD) $(LIBS)
+	$(CC) -g $(CFLAGS) version.c -o ../bin/gversion $(STD) $(LIBS)
