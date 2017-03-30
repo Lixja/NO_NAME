@@ -2,5 +2,6 @@
 
 int main(){
 	connect_to_nnserver();
+	wait_for_connecting();
 	return 0;
 }

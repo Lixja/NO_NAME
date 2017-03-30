@@ -6,6 +6,7 @@
 #include <sys/shm.h>
 #include <pthread.h>
 #include <string.h>
+#include <stdio.h>
 
 #define READY "rfn"
 
@@ -17,6 +18,8 @@ typedef struct{
 	char* sstr;
 }con;
 
+int timeout = 10;
+int alive = 0;
 con c;
 void *establish_connection(), *handle();
 
@@ -29,7 +32,6 @@ int connect_to_nnserver(){
 
 	pthread_t nserver;
 	pthread_create(&nserver, NULL, establish_connection, NULL);
-	pthread_join(&nserver, NULL);
 }
 
 void *establish_connection(){
@@ -40,6 +42,7 @@ void *establish_connection(){
 	while(c.sstr[0] == 'n'){
 		sleep(1);
 	}
+	alive =1;
 	con pc;
 	pc.key = atoi(*c.sstr);
 	pc.size = 100;
@@ -51,6 +54,13 @@ void *establish_connection(){
 
 void *handle(){
 
+}
+
+void wait_for_connecting(){
+	while(alive==0 && timeout > 0){
+		sleep(1);
+		timeout--;
+	}
 }
 
 #endif
