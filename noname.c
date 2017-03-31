@@ -46,6 +46,7 @@ void initSH(){
 	create_nwin(nnsh);
 	wbkgd(nnsh->border, COLOR_PAIR(1));
 	nbox(nnsh);
+	scrollok(nnsh->win, TRUE);
 }
 
 NWIN* create_win(){
